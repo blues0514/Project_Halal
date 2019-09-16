@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/bottom1"
+        android:title="HOME"
+        app:showAsAction="ifRoom"/>
+
+
+    <item
+        android:id="@+id/navigation_alarm"
+        android:icon="@drawable/alarm2"
+        android:title="ALARM"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/navigation_compass"
+        android:icon="@drawable/bottom6"
+        android:title="COMPASS"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/navigation_user"
+        android:icon="@drawable/botton4"
+        android:title="USER"
+        app:showAsAction="ifRoom"/>
+</menu>
