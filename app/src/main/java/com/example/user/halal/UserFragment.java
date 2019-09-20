@@ -76,19 +76,19 @@ public class UserFragment extends Fragment implements NavigationView.OnNavigatio
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.nav_food){
+        if(id == R.id.nav_home){
             startActivity(new Intent(getActivity(), MapsActivity.class));
         }
-        else if(id==R.id.nav_pray){
+        else if(id==R.id.nav_gallery){
             startActivity(new Intent(getActivity(), CompassActivity.class));
         }
-        else if(id == R.id.nav_fac){
+        else if(id == R.id.nav_send){
             startActivity(new Intent(getActivity(), AlarmActivity.class));
         }
-        else if (id == R.id.nav_tour){
+        else if (id == R.id.nav_share){
             startActivity(new Intent(getActivity(), ReceipeActivity.class));
         }
-        else if (id == R.id.nav_logout){
+        else if (id == R.id.nav_slideshow){
             auth.signOut();
             auth.signOut();
             LoginManager.getInstance().logOut();

@@ -5,16 +5,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     HttpURLConnection urlConnection = null;
     URL url=null;
@@ -32,69 +31,22 @@ public class MainActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pull_to_refresh);
-        //HomeFragment tf = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-        //View homeview = (View) getLayoutInflater().inflate(R.layout.fragment_home,null);
-
-        prayinList = new ArrayList<HashMap<String,String>>();
-
-//        RecyclerView view = (RecyclerView)findViewById(R.id.recyclerview);
-////        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,3);
-////        ReceipeActivity  receipeActivity = new ReceipeActivity();
-////        view.setAdapter(receipeActivity);
-////        view.setLayoutManager(layoutManager);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
 
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new HomeFragment()).commit();
-
-//        new Thread(){
-//            prayerAPIVO prayer = new prayerAPIVO();
-//            String urldetail = "https://api.aladhan.com/timingsByAddress/" +
-//                    prayer.getCurrent_date() +
-//                    "?address=" +
-//                    prayer.getLocation() +
-//                    "&method=8&tune=2,3,4,5,2,3,4,5,-3";
-//            public void run(){
-//                String result;
-//
-//                try {
-//
-//                    url= new URL(urldetail);
-//                    urlConnection = (HttpURLConnection) url.openConnection();
-//                    BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-//                    String line;
-//                    StringBuilder sb = new StringBuilder();
-//
-//                    // 라인을 받아와 합친다.
-//                    while ((line = reader.readLine()) != null){
-//                        sb.append(line);
-//                    }
-//
-//                    reader.close();
-//                    result = sb.toString().trim();
-//                }
-//                catch(Exception e){
-//                    e.printStackTrace();
-//                    result = e.toString();
-//
-//                }finally {
-//                    if (urlConnection != null)
-//                        urlConnection.disconnect();
-//                }
-//                if (jsonParser(result,prayer)){
-//
-//                    Message message = mHandler.obtainMessage(101);
-//                    mHandler.sendMessage(message);
-//                }
-//            }
-//        }.start();
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                new HomeFragment()).commit();
-
-
 
     }
     private final MainActivity.MyHandler mHandler = new MainActivity.MyHandler(this);
@@ -127,10 +79,7 @@ public class MainActivity extends BaseActivity {
                     selectedFragment).commit();
             return true;
         }
-
     };
-
-
 
     private static class MyHandler extends Handler {
         private final WeakReference<MainActivity> weakReference;
@@ -138,7 +87,6 @@ public class MainActivity extends BaseActivity {
         public MyHandler(MainActivity mainactivity) {
             weakReference = new WeakReference<MainActivity>(mainactivity);
         }
-
         @Override
         public void handleMessage(Message msg) {
 
@@ -154,35 +102,61 @@ public class MainActivity extends BaseActivity {
             }
         }
     }
-//    public boolean jsonParser(String jsonString,prayerAPIVO prayer){
-//
-//
-//        if (jsonString == null ) return false;
-//        try {
-//            HashMap<String, String> prayTimeKeyValue = new HashMap<String, String>();
-//            JSONObject jsonObject = new JSONObject(jsonString);
-//            String status = jsonObject.get("status").toString();
-//            if(status.equals("OK")){
-//                JSONObject J_Data = jsonObject.getJSONObject("data");
-//                JSONObject j_timings = J_Data.getJSONObject("timings");
-//                for(int i = 0; i < j_timings.names().length(); i++){
-//                    prayTimeKeyValue.put(j_timings.names().get(i).toString(),j_timings.get(j_timings.names().get(i).toString()).toString().toString());
-//                }
-//                prayinList.clear();
-//                prayinList.add(prayTimeKeyValue);
-//                prayer.setprayerTime(prayinList);
-//                if(!prayer.getPrayinList().isEmpty())
-//                    Log.d("godgod",prayer.getPrayinList().get(0).get("Fajr"));
-//
-//            }else{
-//
-//            }
-//
-//            return true;
-//        } catch (JSONException e) {
-//
-//            Log.d("apitest", e.toString() );
-//        }
-//        return false;
-//    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.submenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_tools) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
