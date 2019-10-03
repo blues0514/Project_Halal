@@ -1,5 +1,6 @@
 package com.example.user.halal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,13 +14,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -28,9 +34,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private List<HashMap<String,String>> prayinList = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pull_to_refresh);
+        setContentView(R.layout.maindrawer);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -49,7 +54,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 new HomeFragment()).commit();
 
     }
-    private final MainActivity.MyHandler mHandler = new MainActivity.MyHandler(this);
+
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -94,9 +99,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
             if (mainactivity != null) {
                 switch (msg.what) {
-
                     case 101:
-
                         break;
                 }
             }
@@ -125,11 +128,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        Fragment subFragment = null;
+        switch (item.getItemId()) {
+            case R.id.action_settings :
+                break;
+            case R.id.action_barcode :
+                startActivity(new Intent(MainActivity.this, ScannerActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);
